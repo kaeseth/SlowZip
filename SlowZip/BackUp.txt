@@ -1,0 +1,134 @@
+﻿if (!this.running)
+            {
+                this.running = true;
+                this.startBtn.Enabled = false;
+                this.logCom.Text += "查找缓存目录\r\n";
+                Application.DoEvents();
+                string path = @"E:\Test";
+                DateTime today = DateTime.Now;
+                if (Directory.Exists(path))
+                {
+                    tempPaths = new Queue<string>();
+                    string[] indexs = Directory.GetDirectories(path);
+                    foreach(string index in indexs)
+                    {
+                        tempPaths.Enqueue(index);
+                    }
+                    while (tempPaths.Count>0)
+                    {
+                        string tempIndex = tempPaths.Dequeue();
+                        int startIndex = tempIndex.LastIndexOf('\\');
+                        string temp1 = tempIndex.Substring(startIndex+1);
+                        int indexLength = temp1.Length;
+                        if (indexLength < 10)
+                        {
+                            this.logCom.Text += "分析目录："+tempIndex+"\r\n";
+                            Application.DoEvents();
+                            string[] tempIndexs = Directory.GetDirectories(tempIndex);
+                            if (tempIndexs != null && tempIndexs.Length > 0)
+                            {
+                                foreach(string temp0 in tempIndexs)
+                                {
+                                    tempPaths.Enqueue(temp0);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            this.logCom.Text += "校验目录：" + tempIndex + "\r\n";
+                            Application.DoEvents();
+                            DateTime lastWriteTime = Directory.GetLastWriteTime(tempIndex);
+                            TimeSpan ts = today - lastWriteTime;
+                            int tsDay = ts.Days;
+                            if (tsDay > 0)
+                            {
+                                this.IndexZip(tempIndex);
+                                this.logCom.Text += "删除目录："+tempIndex+"\r\n";
+                                Application.DoEvents();
+                                Directory.Delete(tempIndex,true);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    this.logCom.Text += "无法获取缓存根目录";
+                    Application.DoEvents();
+                }
+                this.logCom.Text += "End\r\n";
+                Application.DoEvents();
+                this.startBtn.Enabled = true;
+                this.running = false;
+            }
+
+/// <summary>
+        /// 
+        /// </summary>
+        /// <param name="root">要压缩的文件或文件夹的父目录的绝对路径</param>
+        /// <param name="file">要压缩的文件或文件夹的绝对路径</param>
+        /// <param name="stream">要写入的压缩文件的流</param>
+        private void Zip(string root,string file,ZipOutputStream stream)
+        {
+            if (Directory.Exists(file))
+            {
+                this.logCom.Text+="分析目录："+file+"\r\n";
+                Application.DoEvents();
+                string[] indexs = Directory.GetDirectories(file);
+                if (indexs != null && indexs.Length > 0)
+                {
+                    foreach(string index in indexs)
+                    {
+                        this.Zip(root,index,stream);
+                    }
+                }
+                string[] files = Directory.GetFiles(file);
+                if (files != null && files.Length > 0)
+                {
+                    foreach(string tempFile in files)
+                    {
+                        this.Zip(root,tempFile,stream);
+                    }
+                }
+            }
+            else if (File.Exists(file))
+            {
+                this.logCom.Text += "压缩文件：" + file + "\r\n";
+                Application.DoEvents();
+                string rPath = file.Replace(root,"");
+                ZipEntry entry = new ZipEntry(rPath);
+                stream.PutNextEntry(entry);
+                FileStream fs = File.OpenRead(file);
+                byte[] buffer = new byte[fs.Length];
+                fs.Read(buffer, 0, buffer.Length);
+                stream.Write(buffer, 0, buffer.Length);
+                fs.Flush();
+                fs.Dispose();
+                fs = null;
+            }
+            else
+            {
+                this.logCom.Text += "非法路径：" + file + "\r\n";
+                Application.DoEvents();
+            }
+        }
+        private void IndexZip(string index)
+        {
+            if (Directory.Exists(index))
+            {
+                this.logCom.Text += "压缩目录：" + index + "\r\n";
+                Application.DoEvents();
+                string zipName = index + ".zip";
+                ZipOutputStream stream = new ZipOutputStream(File.Create(zipName));
+                stream.SetLevel(6);
+                string root = Directory.GetParent(index).FullName;
+                Zip(root, index, stream);
+                stream.Finish();
+                stream.Close();
+            }
+            else
+            {
+                this.logCom.Text += "目录不存在："+index+"\r\n";
+                Application.DoEvents();
+            }
+        }
+

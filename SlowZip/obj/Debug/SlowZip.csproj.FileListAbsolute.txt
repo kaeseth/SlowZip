@@ -1,0 +1,11 @@
+D:\AppData\work\VSProject\SlowZip\SlowZip\bin\Debug\SlowZip.exe.config
+D:\AppData\work\VSProject\SlowZip\SlowZip\bin\Debug\SlowZip.exe
+D:\AppData\work\VSProject\SlowZip\SlowZip\bin\Debug\SlowZip.pdb
+D:\AppData\work\VSProject\SlowZip\SlowZip\bin\Debug\ICSharpCode.SharpZipLib.dll
+D:\AppData\work\VSProject\SlowZip\SlowZip\obj\Debug\SlowZip.MainWindow.resources
+D:\AppData\work\VSProject\SlowZip\SlowZip\obj\Debug\SlowZip.Properties.Resources.resources
+D:\AppData\work\VSProject\SlowZip\SlowZip\obj\Debug\SlowZip.csproj.GenerateResource.cache
+D:\AppData\work\VSProject\SlowZip\SlowZip\obj\Debug\SlowZip.csproj.CoreCompileInputs.cache
+D:\AppData\work\VSProject\SlowZip\SlowZip\obj\Debug\SlowZip.csproj.CopyComplete
+D:\AppData\work\VSProject\SlowZip\SlowZip\obj\Debug\SlowZip.exe
+D:\AppData\work\VSProject\SlowZip\SlowZip\obj\Debug\SlowZip.pdb
